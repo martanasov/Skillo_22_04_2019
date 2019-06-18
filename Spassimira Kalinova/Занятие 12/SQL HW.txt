@@ -1,0 +1,82 @@
+SQL Exercises
+https://www.w3schools.com/sql/trysql.asp?filename=trysql_desc
+
+1.	Show all rows for Customers
+    
+	select * from customers;
+
+
+2.	Show only Contact name information for Customers
+
+	select ContactName from customers;
+
+3.	Show all unique combinations between Cities and Countries for the customers
+
+	select distinct city, country
+        from customers;
+
+4.	Insert 3 new Customers
+
+	insert into customers(
+           CustomerName, 
+           ContactName,
+           Address, 
+           City, 
+           PostalCode,
+           Country)
+           values
+           ('Bob Dillen', 'Bob Dillen', 'Backer str', 'New York', 10000, 'USA'),
+           ('Bob Marley', 'Bob Marley', 'Oyster str', 'London', 10000, 'UK'),
+           ('Madona', 'MadonA', 'Strawberry str', 'London', 10000, 'UK');
+
+5.	Move all orders made by Wilman Kala to Tradição Hipermercados
+
+	update orders
+        set CustomerID=(SELECT CustomerID FROM Customers
+        where CustomerName='Tradição Hipermercados')
+        where CustomerID=(SELECT CustomerID FROM Customers
+        where CustomerName='Wilman Kala')
+
+
+6.	Group all products by category and show category name
+	SELECT CategoryName, count(*) FROM Products p
+        left join Categories c
+        on p.CategoryID=c.CategoryID
+        Group by CategoryName;
+
+
+
+7.	Sort all employees by Last Name and delete the last one. Do not remember to move all his/her orders to another colleague
+	
+        SELECT * FROM [Employees]
+        order by LastName;
+
+	update Orders
+        set EmployeeID=(SELECT EmployeeID FROM Employees where LastName='Davolio')
+        where EmployeeID=(SELECT EmployeeID FROM Employees where LastName='West');
+
+        Delete from Employees
+           where EmployeeID=(SELECT EmployeeID FROM Employees order by LastName desc limit 1);
+
+
+8.	Show all customers without orders
+
+           SELECT CustomerName FROM  Customers c
+           left join  Orders o
+           on c.CustomerID= o.CustomerID
+           Where OrderID is null;
+
+
+9.	Show all products including 'ch' in its name with price between 10 and 20
+
+        SELECT * FROM [Products]
+        Where ProductName like '%ch%' 
+        and Price Between 10 and 20;
+
+10.	Group all products from 9 by category and sort by count in descending order
+
+          SELECT CategoryName, count(*)  FROM Products p
+          left join Categories c
+          on p.CategoryID=c.CategoryID
+          group by p.CategoryID 
+          order by count(*);
